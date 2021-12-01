@@ -26,13 +26,28 @@ namespace Moving_an_Image
         private void FormMoveImage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Right)
-                imgPacMan.Left += speed;
+                if (imgPacMan.Right + speed > this.ClientSize.Width)
+                    imgPacMan.Left = this.ClientSize.Width - imgPacMan.Width;
+                else
+                    imgPacMan.Left += speed;
+
             else if (e.KeyCode == Keys.Left)
-                imgPacMan.Left -= speed;
+                if (imgPacMan.Left - speed < 0)
+                    imgPacMan.Left = 0;
+                else
+                    imgPacMan.Left -= speed;
+
             else if (e.KeyCode == Keys.Up)
-                imgPacMan.Top -= speed;
+                if (imgPacMan.Top - speed < 0)
+                    imgPacMan.Top = 0;
+                else
+                    imgPacMan.Top -= speed;
+       
             else if (e.KeyCode == Keys.Down)
-                imgPacMan.Top += speed;
+                if (imgPacMan.Bottom + speed > this.ClientSize.Height)
+                    imgPacMan.Top = this.ClientSize.Height - imgPacMan.Height;
+                else
+                    imgPacMan.Top += speed;
         }
 
         
