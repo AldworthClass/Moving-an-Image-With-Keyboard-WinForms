@@ -12,7 +12,7 @@ namespace Moving_an_Image
 {
     public partial class FormMoveImage : System.Windows.Forms.Form
     {
-        int speed;
+        int pacXSpeed, pacYSpeed;
         List<PictureBox> rocks = new List<PictureBox>();
         public FormMoveImage()
         {
@@ -21,7 +21,8 @@ namespace Moving_an_Image
 
         private void FormMoveImage_Load(object sender, EventArgs e)
         {
-            speed = 5;
+            pacXSpeed = 0;
+            pacYSpeed = 0;
             rocks.Add(imgRock);
             rocks.Add(imgRock2);
             rocks.Add(imgRock3);
@@ -29,116 +30,71 @@ namespace Moving_an_Image
 
         private void FormMoveImage_KeyDown(object sender, KeyEventArgs e)
         {
-            Rectangle tempRect;
-
             if (e.KeyCode == Keys.Right)
-            {               
-                //Checks for eating a cookie
-                if (imgPacMan.Bounds.Contains(imgCookie.Bounds))
-                    imgCookie.Image = Properties.Resources.crumbs;
-
-                
-
-                if (imgPacMan.Right + speed > this.ClientSize.Width)
-                    imgPacMan.Left = this.ClientSize.Width - imgPacMan.Width;
-
-                else // Pacman will stay on the Form
-                {
-                    tempRect = imgPacMan.Bounds;
-                    tempRect.X += speed;
-                    foreach (PictureBox rock in rocks)
-                    {
-                        if (tempRect.IntersectsWith(rock.Bounds))
-                        {
-                            tempRect.X = rock.Left - tempRect.Width;
-                        }
-                    }                   
-                    imgPacMan.Bounds = tempRect;
-                }
-                    
-
-                
-                
-
+            {
+                pacXSpeed = 3;
             }
-                
-
             else if (e.KeyCode == Keys.Left)
             {
-                //Checks for eating a cookie
-                if (imgPacMan.Bounds.Contains(imgCookie.Bounds))
-                    imgCookie.Image = Properties.Resources.crumbs;
-
-                if (imgPacMan.Left - speed < 0)
-                    imgPacMan.Left = 0;
-                else
-                {
-                    tempRect = imgPacMan.Bounds;
-                    tempRect.X -= speed;
-                    foreach (PictureBox rock in rocks)
-                    {
-                        if (tempRect.IntersectsWith(rock.Bounds))
-                        {
-                            tempRect.X = rock.Right;
-                        }
-                    }            
-                    imgPacMan.Bounds = tempRect;
-                }
+                pacXSpeed = -3;
             }
-                
-
             else if (e.KeyCode == Keys.Up)
             {
-                //Checks for eating a cookie
-                if (imgPacMan.Bounds.Contains(imgCookie.Bounds))
-                    imgCookie.Image = Properties.Resources.crumbs;
-
-                if (imgPacMan.Top - speed < 0)
-                    imgPacMan.Top = 0;
-                else
-                {
-                    tempRect = imgPacMan.Bounds;
-                    tempRect.Y -= speed;
-                    foreach (PictureBox rock in rocks)
-                    {
-                        if (tempRect.IntersectsWith(rock.Bounds))
-                        {
-                            tempRect.Y = rock.Bottom;
-                        }
-                    }
-                    imgPacMan.Bounds = tempRect;
-                }
-                    
+                pacYSpeed = -3;
             }
-                
-       
             else if (e.KeyCode == Keys.Down)
             {
-                //Checks for eating a cookie
-                if (imgPacMan.Bounds.Contains(imgCookie.Bounds))
-                    imgCookie.Image = Properties.Resources.crumbs;
-
-                if (imgPacMan.Bottom + speed > this.ClientSize.Height)
-                    imgPacMan.Top = this.ClientSize.Height - imgPacMan.Height;
-                else
-                {
-                    tempRect = imgPacMan.Bounds;
-                    tempRect.Y += speed;
-                    foreach (PictureBox rock in rocks)
-                    {
-                        if (tempRect.IntersectsWith(rock.Bounds))
-                        {
-                            tempRect.Y = rock.Top - tempRect.Height;
-                        }
-                    }
-                    imgPacMan.Bounds = tempRect;
-                }
-                 
-
-            }
-                
+                pacYSpeed = 3;
+            }              
         }
 
-        
+        private void FormMoveImage_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Right)
+            {
+                pacXSpeed = 0;
+            }
+            else if (e.KeyCode == Keys.Left)
+            {
+                pacXSpeed = 0;
+            }
+            else if (e.KeyCode == Keys.Up)
+            {
+                pacYSpeed = 0;
+            }
+            else if (e.KeyCode == Keys.Down)
+            {
+                pacYSpeed = 0;
+            }
+        }
+
+        private void tmrGameLoop_Tick(object sender, EventArgs e)
+        {
+            Rectangle tempPac;
+            tempPac = imgPacMan.Bounds;
+            tempPac.Offset(pacXSpeed,pacYSpeed);
+            // Horizontal Movement
+            if (tempPac.Right > this.ClientSize.Width || tempPac.Left < 0)
+                pacXSpeed = 0;
+            if (tempPac.Bottom > this.ClientSize.Height || tempPac.Top < 0)
+                pacYSpeed = 0;
+
+            foreach (PictureBox rock in rocks)
+                if (tempPac.IntersectsWith(rock.Bounds))
+                {
+                    pacXSpeed = 0;
+                    pacYSpeed = 0;
+                }
+           
+            // Apply Speed
+            imgPacMan.Left += pacXSpeed;
+            imgPacMan.Top += pacYSpeed;
+
+            // PacMan has moved if possible, see if he eats a cookie
+            //Checks for eating a cookie
+            if (imgPacMan.Bounds.Contains(imgCookie.Bounds))
+                imgCookie.Image = Properties.Resources.crumbs;
+
+        }
     }
 }

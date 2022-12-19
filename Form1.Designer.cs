@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.imgPacMan = new System.Windows.Forms.PictureBox();
             this.imgCookie = new System.Windows.Forms.PictureBox();
             this.imgRock = new System.Windows.Forms.PictureBox();
             this.imgRock3 = new System.Windows.Forms.PictureBox();
             this.imgRock2 = new System.Windows.Forms.PictureBox();
+            this.tmrGameLoop = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.imgPacMan)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCookie)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgRock)).BeginInit();
@@ -92,6 +94,12 @@
             this.imgRock2.TabIndex = 4;
             this.imgRock2.TabStop = false;
             // 
+            // tmrGameLoop
+            // 
+            this.tmrGameLoop.Enabled = true;
+            this.tmrGameLoop.Interval = 30;
+            this.tmrGameLoop.Tick += new System.EventHandler(this.tmrGameLoop_Tick);
+            // 
             // FormMoveImage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -106,6 +114,7 @@
             this.Text = "Move Image";
             this.Load += new System.EventHandler(this.FormMoveImage_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMoveImage_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormMoveImage_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.imgPacMan)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCookie)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgRock)).EndInit();
@@ -122,6 +131,7 @@
         private System.Windows.Forms.PictureBox imgRock;
         private System.Windows.Forms.PictureBox imgRock3;
         private System.Windows.Forms.PictureBox imgRock2;
+        private System.Windows.Forms.Timer tmrGameLoop;
     }
 }
 
